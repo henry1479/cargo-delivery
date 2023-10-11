@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cost form</title>
+</head>
+<body>
+    <form method="post" action="#">
+        <label for="klad1">Введите пункт отправления:</label>
+        <input type="text" name="klad1"  class="kl1" required />
+        <label for="klad2">Введите пункт назначения:</label>
+        <input type="text" name="klad2" class="kl2"required />
+        <label for="weight">Введите массу груза:</label>
+        <input type="number" name="weight" class="weight" required default="100"/>
+            <div>
+                <input type="radio" name="delivery" id="slow" value="slow"/>
+                <label for="slow">Медленная доставка</label>
+                <input type="radio" name="delivery" id="quick" value="quick" />
+                <label for="quick">Быстрая доставка</label>
+            </div>
+        <button type="button" id="sendButton">Получить данные</button>
+    </form>    
+    <script>
+        window.onload = function() {
+            const klad1 = document.querySelector(".kl1");
+            const klad2 = document.querySelector(".kl2");
+            const weight = document.querySelector(".weight");
+            const button = document.querySelector("#sendButton");
+            const radios = document.getElementsByName("delivery");
+
+            async function fetchData(event) {
+                let selected = Array.from(radios).find(radio => radio.checked);
+                const fd = new FormData();
+                fd.set("klad1", klad1.value);
+                fd.set("klad2", klad2.value);
+                fd.set("weight", weight.value);
+                fd.set("timestamp", new Date());
+                fd.set("delivery", selected.value)
+                const response = await fetch("http://localhost:8000", {
+                    method: 'post',
+                    headers: {
+                        "Accept": "application/json;",
+                    },
+                    body: fd,
+                });
+
+                const result = await response.json();
+                console.log(result)
+
+            }
+
+            button.addEventListener("click",() => fetchData());
+
+        }
+
+    </script>
+</body>
+</html>

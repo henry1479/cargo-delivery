@@ -1,0 +1,5 @@
+/public/.env
+/docker
+/vendor
+docker-compose.yml
+*.cache
